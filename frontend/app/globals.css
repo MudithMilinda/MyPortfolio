@@ -1,26 +1,197 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+html {
+  scroll-behavior: smooth;
 }
 
-@theme inline {
+:root {
+  --background: #000000;
+  --foreground: #fafafa;
+
+  --ink: #ffffff;
+  --muted: #a1a1aa;
+  --line: #292136;
+  --accent: #f22aa8;
+  --gold: #333333;
+  --plasma-pink: #f22aa8;
+  --plasma-violet: #8b5cf6;
+  --plasma-blue: #356dff;
+  --plasma-surface: #10091a;
+}
+
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-gold: var(--gold);
+  --color-plasma-pink: var(--plasma-pink);
+  --color-plasma-violet: var(--plasma-violet);
+  --color-plasma-blue: var(--plasma-blue);
+  --color-plasma-surface: var(--plasma-surface);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
+  background-image:
+    radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--plasma-pink) 8%, transparent), transparent 28rem),
+    radial-gradient(circle at 92% 28%, color-mix(in srgb, var(--plasma-blue) 8%, transparent), transparent 30rem);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
+
+section[id] {
+  scroll-margin-top: 1.5rem;
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes reveal-right {
+  from {
+    opacity: 0;
+    transform: translateX(28px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes soft-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes pulse-accent {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--plasma-pink) 45%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--plasma-pink) 0%, transparent);
+  }
+}
+
+@keyframes tech-drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(1deg);
+  }
+}
+
+.motion-reveal {
+  animation: reveal-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.motion-reveal-right {
+  animation: reveal-right 850ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.motion-delay-1 {
+  animation-delay: 120ms;
+}
+
+.motion-delay-2 {
+  animation-delay: 240ms;
+}
+
+.motion-delay-3 {
+  animation-delay: 360ms;
+}
+
+.motion-delay-4 {
+  animation-delay: 480ms;
+}
+
+.motion-float {
+  animation: soft-float 5s ease-in-out 900ms infinite;
+}
+
+.motion-pulse {
+  animation: pulse-accent 2.4s ease-in-out infinite;
+}
+
+.tech-icon-drift {
+  animation: tech-drift var(--tech-duration, 4.8s) ease-in-out var(--tech-delay, 0ms) infinite;
+}
+
+.tech-tile:hover .tech-icon-drift {
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--plasma-pink) 70%, transparent));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* == Hero Background Animations == */
+
+.hero-grid {
+  background-image:
+    linear-gradient(to right, currentColor 1px, transparent 1px),
+    linear-gradient(to bottom, currentColor 1px, transparent 1px);
+  background-size: 42px 42px;
+  color: var(--foreground);
+  animation: grid-drift 22s linear infinite;
+}
+
+@keyframes grid-drift {
+  0%   { background-position: 0px 0px; }
+  100% { background-position: 42px 42px; }
+}
+
+.hero-blob {
+  animation: blob-move 16s ease-in-out infinite;
+}
+.hero-blob-1 {
+  top: -8%;
+  left: 55%;
+  animation-duration: 18s;
+}
+.hero-blob-2 {
+  bottom: -10%;
+  left: 5%;
+  animation-duration: 21s;
+  animation-delay: 2s;
+}
+
+@keyframes blob-move {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(30px, -25px) scale(1.08); }
+  66%       { transform: translate(-25px, 20px) scale(0.95); }
+}
+
+.hero-glyph {
+  animation-name: glyph-float;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes glyph-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.25; }
+  50%       { transform: translateY(-18px) rotate(-3deg); opacity: 0.5; }
+}
+
