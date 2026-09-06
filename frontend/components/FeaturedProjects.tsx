@@ -33,12 +33,12 @@ const PROJECTS = [
     href: "https://quickmail-five.vercel.app/",
   },
   {
-    title: "Social Automation",
+    title: "JOBALIGN",
     description:
-      "A SaaS platform allowing users to schedule and automate social media posts across multiple networks simultaneously with AI copy generation.",
+      "An AI-powered career platform designed to analyze user CVs against target job markets, match relevant job openings, and streamline career optimization.",
     image:
-      "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80",
-    href: "#",
+      "/images/jobalign.png",
+    href: "https://jobalign-indol.vercel.app/",
   },
   {
     title: "Mobile Habit Tracker",
