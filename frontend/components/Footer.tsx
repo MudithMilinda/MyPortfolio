@@ -1,12 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Geist } from "next/font/google";
-
-// Resend's wordmark uses a rounded, geometric grotesk — Geist is the closest
-// match available as a Google Font. Swap this for your preferred family.
-const geist = Geist({ subsets: ["latin"], weight: ["700", "800", "900"] });
-
 const SOCIALS = [
   {
     label: "LinkedIn",
@@ -233,7 +227,7 @@ export default function Footer() {
         {/* Base layer — embossed letterforms, clearly legible at rest with a
             soft top-light gradient, the way Resend's mark reads before hover */}
         <p
-          className={`${geist.className} m-0 text-center font-black leading-none`}
+          className="m-0 text-center font-black leading-none"
           style={{
             fontSize: heroFontSize,
             letterSpacing: "-0.04em",
@@ -252,7 +246,7 @@ export default function Footer() {
             small radius around the cursor, like light catching an edge */}
         {spotlight && (
           <p
-            className={`${geist.className} pointer-events-none absolute inset-0 m-0 text-center font-black leading-none`}
+            className="pointer-events-none absolute inset-0 m-0 text-center font-black leading-none"
             style={{
               fontSize: heroFontSize,
               letterSpacing: "-0.04em",

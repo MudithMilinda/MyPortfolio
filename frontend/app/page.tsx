@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col lg:flex-row">
       <Sidebar />
-      <div className="flex-1">
+      <div className="min-w-0 flex-1 lg:ml-[240px]">
         <Hero />
         <Services />
         <AboutMe />

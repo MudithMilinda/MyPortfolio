@@ -124,8 +124,11 @@ export default function Contact() {
             <Mail size={24} className="text-plasma-pink" />
           </div>
 
-          <h2 className="font-display text-5xl font-bold leading-tight tracking-tight text-foreground sm:text-6xl">
-            Contact us
+          <h2 className="text-[clamp(3rem,5.2vw,5.5rem)] font-medium leading-[0.82] tracking-[-0.075em] text-foreground">
+            <span className="block uppercase">CONTACT</span>
+            <span className="font-signature ml-[7.5ch] mt-5 block text-[clamp(4.2rem,6.7vw,7rem)] font-normal leading-[0.55] tracking-[-0.045em] text-plasma-violet">
+              Us.
+            </span>
           </h2>
 
           <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-muted">
@@ -196,12 +199,12 @@ export default function Contact() {
         <div
           ref={rightRef}
           style={{ transitionDelay: rightInView ? "200ms" : "0ms" }}
-          className={`relative overflow-hidden rounded-2xl border border-line bg-zinc-950 p-8 shadow-2xl shadow-black/60 transition-all duration-700 ease-out sm:p-10 ${
+          className={`relative min-h-[680px] overflow-hidden rounded-2xl border border-plasma-violet/35 bg-[#09090b] p-8 shadow-2xl shadow-black/60 transition-all duration-700 ease-out sm:p-10 ${
             rightInView ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
           }`}
         >
           <div
-            className="pointer-events-none absolute right-0 top-0 h-48 w-48 opacity-[0.07]"
+            className="pointer-events-none absolute right-0 top-0 h-56 w-56 opacity-[0.12]"
             style={{
               backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)",
               backgroundSize: "14px 14px",
@@ -235,7 +238,7 @@ export default function Contact() {
                   value={form.name}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-line bg-plasma-surface px-4 py-3 text-[14px] text-foreground placeholder-zinc-600 outline-none transition-colors focus:border-plasma-pink/60 focus:ring-1 focus:ring-plasma-pink/30"
+                  className="w-full rounded-lg border border-plasma-violet/30 bg-[#10091a] px-4 py-3 text-[14px] text-foreground placeholder-zinc-600 outline-none transition-colors focus:border-plasma-pink/60 focus:ring-1 focus:ring-plasma-pink/30"
                 />
               </div>
 
@@ -252,7 +255,7 @@ export default function Contact() {
                   value={form.email}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-line bg-plasma-surface px-4 py-3 text-[14px] text-foreground placeholder-zinc-600 outline-none transition-colors focus:border-plasma-pink/60 focus:ring-1 focus:ring-plasma-pink/30"
+                  className="w-full rounded-lg border border-plasma-violet/30 bg-[#10091a] px-4 py-3 text-[14px] text-foreground placeholder-zinc-600 outline-none transition-colors focus:border-plasma-pink/60 focus:ring-1 focus:ring-plasma-pink/30"
                 />
               </div>
 
@@ -268,7 +271,7 @@ export default function Contact() {
                   placeholder="Aceternity Labs LLC"
                   value={form.company}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-line bg-plasma-surface px-4 py-3 text-[14px] text-foreground placeholder-zinc-600 outline-none transition-colors focus:border-plasma-pink/60 focus:ring-1 focus:ring-plasma-pink/30"
+                  className="w-full rounded-lg border border-plasma-violet/30 bg-[#10091a] px-4 py-3 text-[14px] text-foreground placeholder-zinc-600 outline-none transition-colors focus:border-plasma-pink/60 focus:ring-1 focus:ring-plasma-pink/30"
                 />
               </div>
 
@@ -285,7 +288,7 @@ export default function Contact() {
                   value={form.message}
                   onChange={handleChange}
                   required
-                  className="w-full resize-none rounded-lg border border-line bg-plasma-surface px-4 py-3 text-[14px] text-foreground placeholder-zinc-600 outline-none transition-colors focus:border-plasma-pink/60 focus:ring-1 focus:ring-plasma-pink/30"
+                  className="w-full resize-none rounded-lg border border-plasma-violet/30 bg-[#10091a] px-4 py-3 text-[14px] text-foreground placeholder-zinc-600 outline-none transition-colors focus:border-plasma-pink/60 focus:ring-1 focus:ring-plasma-pink/30"
                 />
               </div>
 
@@ -297,7 +300,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-1 w-full rounded-lg bg-foreground px-6 py-3 text-[14px] font-semibold text-background transition-opacity hover:opacity-85 active:opacity-70 disabled:opacity-50 sm:w-auto"
+                className="mt-1 w-full bg-foreground px-6 py-3.5 text-[10px] font-medium uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-85 active:opacity-70 disabled:opacity-50"
               >
                 {loading ? "Sending..." : "Submit"}
               </button>

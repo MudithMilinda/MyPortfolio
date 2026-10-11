@@ -96,10 +96,10 @@ export default function AboutPage() {
                             />
                         </div>
 
-                        {/* Right Side: Content block with "ABOUT ME", Quote, Name and Role */}
+                        {/* Right Side: personal profile card */}
                         <div
                             style={{ transitionDelay: inView ? "260ms" : "0ms" }}
-                            className={`flex min-h-[390px] relative z-10 flex-col justify-center px-8 py-12 transition-all duration-700 ease-out sm:px-12 lg:px-12 xl:px-16 ${inView
+                            className={`relative z-10 flex min-h-[390px] flex-col px-8 py-10 transition-all duration-700 ease-out sm:px-12 lg:px-12 xl:px-16 ${inView
                                     ? "translate-x-0 opacity-100"
                                     : "translate-x-10 opacity-0"
                                 }`}
@@ -107,17 +107,38 @@ export default function AboutPage() {
                             <p className="text-[13px] font-medium uppercase tracking-[0.28em] text-muted">
                                 ABOUT ME
                             </p>
-                            <blockquote className="mt-6 max-w-3xl font-display text-3xl leading-[1.12] tracking-tight text-foreground sm:text-4xl xl:text-5xl">
-                                &quot;I build systems that think, scale, and connect — from
-                                code to intelligent automation.&quot;
-                            </blockquote>
-                            <div className="mt-10">
-                                <p className="text-xl font-semibold text-foreground">
-                                    G.Mudith Milinda
+                            <p className="mt-5 max-w-3xl text-[clamp(2rem,3vw,3.25rem)] font-normal leading-[1.08] tracking-[-0.055em] text-foreground">
+                                &quot;I build systems that think, scale, and connect — from code to intelligent automation.&quot;
+                            </p>
+                            <div className="mt-6 max-w-3xl space-y-4 text-[15px] leading-relaxed text-muted sm:text-base">
+                                <p>
+                                    I&apos;m Mudith Milinda, a software engineer based in Sri Lanka. I build modern web applications and digital systems that balance thoughtful design, reliable engineering, and real-world usability.
                                 </p>
-                                <p className="mt-1 text-[15px] text-muted">
-                                    Full Stack Developer &amp; AI Systems Engineer
+                                <p>
+                                    My work spans front-end interfaces, back-end services, APIs, and cloud-ready solutions. I care about clean code, maintainable systems, and products people enjoy using.
                                 </p>
+                            </div>
+
+                            <div className="mt-8 grid border-t border-line pt-5 sm:grid-cols-2 sm:gap-x-8">
+                                <div className="border-b border-line pb-5 sm:border-b-0">
+                                    <p className="text-[9px] font-medium uppercase tracking-[0.24em] text-muted">Location</p>
+                                    <p className="mt-2 text-[14px] font-medium text-foreground">Sri Lanka · Remote / Hybrid</p>
+                                </div>
+                                <div className="pt-5 sm:pt-0">
+                                    <p className="text-[9px] font-medium uppercase tracking-[0.24em] text-muted">Current focus</p>
+                                    <p className="mt-2 text-[14px] font-medium text-foreground">Full-stack development &amp; AI systems</p>
+                                </div>
+                                <div className="col-span-full mt-5 border-t border-line pt-5">
+                                    <p className="text-[9px] font-medium uppercase tracking-[0.24em] text-muted">Interests</p>
+                                    <p className="mt-2 text-[14px] font-medium text-foreground">Full-stack Development · UI/UX design · Cloud solutions · AI agentic</p>
+                                </div>
+                            </div>
+
+                            <div className="mt-7 flex flex-wrap gap-3">
+                                <a href="/Mudith%20Milinda.pdf" download className="border border-foreground bg-foreground px-4 py-3 text-[10px] font-medium uppercase tracking-[0.2em] text-background transition-colors hover:bg-transparent hover:text-foreground">Download CV ↓</a>
+                                <a href="https://www.linkedin.com/in/mudith-milinda-8729aa273/" target="_blank" rel="noopener noreferrer" className="border border-line px-4 py-3 text-[10px] font-medium uppercase tracking-[0.2em] text-foreground transition-colors hover:border-plasma-violet hover:text-plasma-violet">LinkedIn ↗</a>
+                                <a href="https://github.com/MudithMilinda" target="_blank" rel="noopener noreferrer" className="border border-line px-4 py-3 text-[10px] font-medium uppercase tracking-[0.2em] text-foreground transition-colors hover:border-plasma-violet hover:text-plasma-violet">GitHub ↗</a>
+                                <a href="#contact" className="border border-line px-4 py-3 text-[10px] font-medium uppercase tracking-[0.2em] text-foreground transition-colors hover:border-plasma-violet hover:text-plasma-violet">Contact ↗</a>
                             </div>
                         </div>
                     </div>

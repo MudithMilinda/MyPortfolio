@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pencil } from "lucide-react";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa6";
+import { motion } from "framer-motion";
 
 const NAV_ITEMS = [
   { label: "Home", href: "#home" },
@@ -24,6 +25,41 @@ const SOCIALS = [
 export default function Sidebar() {
   const [active, setActive] = useState("Home");
 
+  useEffect(() => {
+    let frame = 0;
+    const syncActiveSection = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const marker = window.innerHeight * 0.36;
+        let current = NAV_ITEMS[0].label;
+        let closestSectionTop = Number.NEGATIVE_INFINITY;
+
+        for (const item of NAV_ITEMS) {
+          const section = document.querySelector(item.href);
+          const sectionTop = section?.getBoundingClientRect().top;
+          if (
+            sectionTop !== undefined &&
+            sectionTop <= marker &&
+            sectionTop > closestSectionTop
+          ) {
+            current = item.label;
+            closestSectionTop = sectionTop;
+          }
+        }
+        setActive(current);
+      });
+    };
+
+    syncActiveSection();
+    window.addEventListener("scroll", syncActiveSection, { passive: true });
+    window.addEventListener("resize", syncActiveSection);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", syncActiveSection);
+      window.removeEventListener("resize", syncActiveSection);
+    };
+  }, []);
+
   function handleNavigationClick(
     event: React.MouseEvent<HTMLAnchorElement>,
     href: string,
@@ -39,7 +75,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-full shrink-0 border-b border-line bg-background px-6 py-8 lg:h-screen lg:w-[240px] lg:border-b-0 lg:border-r lg:sticky lg:top-0 lg:overflow-y-auto">
+    <aside className="w-full shrink-0 border-b border-line bg-background px-6 py-8 lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:h-screen lg:w-[240px] lg:border-b-0 lg:border-r lg:overflow-y-auto">
       {/* Profile */}
       <div className="motion-reveal mb-8">
         <div className="relative mb-4 h-11 w-11 overflow-hidden rounded-full bg-line">
@@ -77,13 +113,17 @@ export default function Sidebar() {
                   onClick={(event) =>
                     handleNavigationClick(event, item.href, item.label)
                   }
-                  className={`flex items-center gap-2 rounded-md px-2 py-[7px] text-[14px] transition-colors ${isActive
-                    ? "font-semibold text-plasma-pink"
+                  className={`flex items-center gap-2 rounded-md px-2 py-[7px] text-[14px] transition-all duration-300 ease-out ${isActive
+                    ? "bg-plasma-pink/10 font-semibold text-plasma-pink"
                     : "text-muted hover:text-foreground"
                     }`}
                 >
                   {isActive && (
-                    <span className="motion-pulse h-1.5 w-1.5 rounded-full bg-plasma-pink" />
+                    <motion.span
+                      layoutId="active-nav-dot"
+                      transition={{ type: "spring", stiffness: 380, damping: 28 }}
+                      className="h-1.5 w-1.5 rounded-full bg-plasma-pink"
+                    />
                   )}
                   {item.label}
                 </a>

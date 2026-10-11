@@ -1,8 +1,9 @@
 "use client";
 
+import { useRef } from "react";
 import { Code2, Bot, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const SERVICES = [
   {
@@ -61,8 +62,19 @@ const iconHoverVariants = {
 };
 
 export default function Services() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start 65%", "end 35%"],
+  });
+
+  // These values automatically reverse when the visitor scrolls back up.
+  const moveRight = useTransform(scrollYProgress, [0, 0.35, 1], [0, 0, 300]);
+  const moveLeft = useTransform(scrollYProgress, [0, 0.35, 1], [0, 0, -300]);
+
   return (
     <section
+      ref={sectionRef}
       id="expertise"
       className="flex w-full items-center justify-center bg-background px-6 py-32 text-foreground lg:px-16"
     >
@@ -72,20 +84,25 @@ export default function Services() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="mx-auto mb-20 max-w-xl text-center"
+          className="mx-auto mb-20 max-w-5xl text-left"
         >
-          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-plasma-pink">
-            What I Do
-          </p>
-          <h2 className="mt-3 text-balance font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            Code, intelligence, and systems that scale
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-plasma-pink">What I Do</p>
+          <h2 className="mt-5 text-[clamp(2.8rem,4.8vw,5.5rem)] font-semibold leading-[0.82] tracking-[-0.075em] text-foreground">
+            <motion.span style={{ x: moveRight }} className="block">I TURN</motion.span>
+            <motion.span style={{ x: moveLeft }} className="relative block w-fit text-plasma-violet after:absolute after:inset-x-0 after:bottom-[0.12em] after:h-px after:bg-plasma-violet">
+              COMPLEX PROBLEMS
+            </motion.span>
+            <motion.span style={{ x: moveRight }} className="block">INTO POWERFUL</motion.span>
+            <motion.span style={{ x: moveLeft }} className="relative block w-fit text-plasma-violet after:absolute after:inset-x-0 after:bottom-[0.12em] after:h-px after:bg-plasma-violet">
+              DIGITAL SOLUTIONS.
+            </motion.span>
           </h2>
-          <p className="mt-4 text-muted">
+          <p className="mt-7 text-muted">
             End-to-end development services spanning full-stack web apps, intelligent AI agents, and ERP solutions built to power modern businesses.
           </p>
         </motion.div>
 
-        <div className="mx-auto grid w-full max-w-5xl gap-12 pt-4 md:grid-cols-3 md:gap-8">
+        <div className="mx-auto grid w-full max-w-5xl gap-12 pt-1 md:grid-cols-3 md:gap-8">
           {SERVICES.map((service, index) => {
             const Icon = service.icon;
             return (

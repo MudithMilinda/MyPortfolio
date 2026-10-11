@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Feather, ArrowUpRight } from "lucide-react";
-import { FaGithub, FaLinkedinIn } from "react-icons/fa6";
 
 // Decorative background: subtle grid drift, floating code glyphs, and soft gradient blobs.
 // Pure CSS (styled-jsx), pointer-events disabled, sits behind all content (z-0).
@@ -31,7 +30,7 @@ function HeroBackgroundFX() {
       {glyphs.map((g, i) => (
         <span
           key={i}
-          className={`hero-glyph absolute font-mono ${g.size} text-muted/25`}
+          className={`hero-glyph absolute ${g.size} text-muted/25`}
           style={{
             top: g.top,
             left: g.left,
@@ -41,6 +40,9 @@ function HeroBackgroundFX() {
           dangerouslySetInnerHTML={{ __html: g.text }}
         />
       ))}
+
+      {/* Let the decorative grid and glow dissolve naturally into the page. */}
+      <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent via-background/75 to-background" />
     </div>
   );
 }
@@ -55,21 +57,32 @@ export default function Hero() {
 
       <div className="relative z-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_auto]">
         {/* Left: intro copy */}
-        <div className="max-w-[430px]">
-          <div className="motion-reveal mb-4 flex items-center gap-2 text-[14px] text-ink">
+        <div className="max-w-[560px] lg:max-w-[680px]">
+          <div className="motion-reveal mb-4 flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.18em] text-ink sm:text-[11px]">
             <Feather size={15} />
-            <span>Hey there. I&apos;m</span>
+            <span>Portfolio</span>
           </div>
 
-          <h2 className="motion-reveal motion-delay-1 font-display text-[56px] leading-[0.92] tracking-tight text-ink sm:text-[64px]">
-            MUDITH
-            <br />
-            MILINDA
-          </h2>
+          <h1 className="motion-reveal motion-delay-1 hero-headline text-ink">
+            <span className="hero-title block whitespace-nowrap text-[clamp(3.5rem,10vw,6rem)]">ENGINEERING</span>
+            <span className="hero-title -mt-[0.04em] ml-[12%] block whitespace-nowrap text-[clamp(3.5rem,10vw,6rem)]">DIGITAL</span>
+            <span className="font-signature -mt-2 ml-[2%] block whitespace-nowrap text-[clamp(5.25rem,17vw,10.5rem)] leading-[0.68] text-plasma-violet">experiences.</span>
+          </h1>
 
-          <p className="motion-reveal motion-delay-2 mt-6 text-[15px] leading-relaxed text-muted">
-            Software Engineer graduate currently interning at SoftVision IT
-            Group (Pvt) Ltd, building responsive and scalable full-stack web applications using React.js, Next.js, Node.js, and MongoDB.
+          <div className="motion-reveal motion-delay-2 mt-13 ml-1 border-l border-plasma-violet/60 pl-4">
+            <p className="text-[18px] font-medium leading-none tracking-tight text-ink">
+              Mudith Milinda
+            </p>
+            <p className="mt-2 whitespace-nowrap text-[9px] font-medium uppercase tracking-[0.24em] text-muted sm:text-[10px]">
+              Software Engineer <span className="mx-1 text-plasma-violet">·</span> Full-Stack Developer
+            </p>
+          </div>
+
+          <p className="motion-reveal motion-delay-3 mt-7 max-w-[430px] text-[15px] leading-relaxed text-muted">
+            I design, develop, and engineer scalable software solutions, modern
+            web applications, and intelligent digital systems with a focus on
+            performance, reliability, user experience, and clean, maintainable
+            code.
           </p>
 
           <div className="motion-reveal motion-delay-2 mt-5 flex items-center gap-2 text-[13px] font-medium text-ink">
@@ -79,33 +92,12 @@ export default function Hero() {
 
           <a
             href="#contact"
-            className="motion-reveal motion-delay-3 mt-6 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-[14px] font-semibold text-background transition-transform duration-300 hover:-translate-y-1 hover:opacity-85"
+            className="motion-reveal motion-delay-3 mt-6 inline-flex items-center gap-2 bg-foreground px-5 py-3 text-[10px] font-medium uppercase tracking-[0.2em] text-background transition-transform duration-300 hover:-translate-y-1 hover:opacity-85"
           >
             Contact
             <ArrowUpRight size={16} />
           </a>
 
-
-          <div className="motion-reveal motion-delay-4 mt-5 flex items-center gap-4">
-            <a
-              href="https://github.com/MudithMilinda"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Visit GitHub profile"
-              className="text-muted transition-colors hover:text-foreground"
-            >
-              <FaGithub className="h-[19px] w-[19px]" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/mudith-milinda-8729aa273/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Visit LinkedIn profile"
-              className="text-muted transition-colors hover:text-foreground"
-            >
-              <FaLinkedinIn className="h-[19px] w-[19px]" />
-            </a>
-          </div>
         </div>
 
         {/* Right: portrait + stats */}
@@ -123,14 +115,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Tagline banner */}
-      <div className="motion-reveal motion-delay-4 relative z-10 mt-26 flex items-center gap-6">
-        <div className="h-px flex-1 bg-line" />
-        <p className="max-w-[520px] text-center text-[13px] font-medium leading-relaxed text-ink">
-          Driving growth through modern software solutions, full-stack web development, and AI-powered applications.
-        </p>
-        <div className="h-px flex-1 bg-line" />
-      </div>
     </section>
   );
 }

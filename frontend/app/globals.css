@@ -2,6 +2,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 :root {
@@ -34,11 +35,28 @@ html {
 }
 
 body {
+  --font-display: var(--font-body);
+  overflow-x: clip;
   background-color: var(--background);
   background-image:
     radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--plasma-pink) 8%, transparent), transparent 28rem),
     radial-gradient(circle at 92% 28%, color-mix(in srgb, var(--plasma-blue) 8%, transparent), transparent 30rem);
   color: var(--foreground);
+}
+
+/* Reference typography: condensed display, technical mono, and calligraphy accent. */
+.hero-title {
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.82;
+  text-transform: uppercase;
+}
+
+.font-signature {
+  font-family: var(--font-signature), cursive;
+  font-weight: 400;
+  letter-spacing: -0.025em;
 }
 
 section[id] {
@@ -194,4 +212,3 @@ section[id] {
   0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.25; }
   50%       { transform: translateY(-18px) rotate(-3deg); opacity: 0.5; }
 }
-

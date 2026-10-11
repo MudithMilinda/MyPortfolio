@@ -50,6 +50,14 @@ const PROJECTS = [
   },
 ];
 
+const PROJECT_METADATA = [
+  { category: "Web / Product", tags: ["Next.js", "React", "Tailwind CSS"] },
+  { category: "Web / Product", tags: ["Next.js", "React", "Responsive UI"] },
+  { category: "Web / Tool", tags: ["Next.js", "TypeScript", "API"] },
+  { category: "AI / Product", tags: ["Next.js", "AI", "REST APIs"] },
+  { category: "Mobile / Product", tags: ["Flutter", "Firebase", "Mobile UI"] },
+];
+
 const CornerPlusIcons = () => (
   <>
     <PlusIcon className="absolute -top-3 -left-3 z-20" delay={0} />
@@ -137,6 +145,8 @@ const ProjectCard: React.FC<{
   href?: string;
   index: number;
 }> = ({ className = "", title, description, image, href = "#", index }) => {
+  const meta = PROJECT_METADATA[index];
+
   return (
     <motion.div
       initial="hidden"
@@ -147,7 +157,7 @@ const ProjectCard: React.FC<{
       animate="rest"
       whileHover="hover"
       className={cn(
-        "group relative border border-dashed border-line bg-background min-h-[300px]",
+        "group relative min-h-[440px] self-start border border-line bg-background",
         "flex flex-col transition-colors hover:border-plasma-violet/60",
         className
       )}
@@ -162,32 +172,40 @@ const ProjectCard: React.FC<{
 
         {/* Image Section */}
         {image && (
-          <div className="relative w-full flex-1 min-h-[160px] overflow-hidden border-b border-dashed border-line">
+          <div className="relative w-full flex-1 min-h-[230px] overflow-hidden border-b border-line">
             <div className="absolute inset-0 bg-background/30 group-hover:bg-transparent transition-colors z-10 duration-500" />
             <ParallaxImage src={image} alt={title} />
           </div>
         )}
 
         {/* Content Section */}
-        <div className="relative z-10 flex flex-col justify-end p-6 bg-background">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-plasma-pink">
-              {title}
-            </h3>
-            <motion.span
-              variants={{
-                rest: { opacity: 0, x: -8, rotate: -45 },
-                hover: { opacity: 1, x: 0, rotate: 0 },
-              }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="shrink-0 text-plasma-violet"
-            >
-              <ArrowUpRight size={20} strokeWidth={1.75} />
-            </motion.span>
+        <div className="relative z-10 flex flex-1 flex-col p-6">
+          <div className="flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.2em] text-muted">
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <span>{meta.category}</span>
           </div>
-          <p className="mt-2 text-[15px] text-muted leading-relaxed">
+          <h3 className="mt-7 text-[clamp(1.8rem,3vw,3rem)] font-semibold leading-none tracking-[-0.06em] text-foreground transition-colors group-hover:text-plasma-violet">
+            {title}
+          </h3>
+          <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted">
             {description}
           </p>
+          <div className="mt-auto flex items-end justify-between gap-4 pt-7">
+            <div className="flex flex-wrap gap-2">
+              {meta.tags.map((tag) => (
+                <span key={tag} className="border border-plasma-violet/45 px-2 py-1 text-[8px] font-medium uppercase tracking-[0.16em] text-muted">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <motion.span
+              variants={{ rest: { rotate: 0 }, hover: { rotate: 45 } }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-foreground text-foreground transition-colors group-hover:border-plasma-violet group-hover:text-plasma-violet"
+            >
+              <ArrowUpRight size={18} strokeWidth={1.5} />
+            </motion.span>
+          </div>
         </div>
       </Link>
     </motion.div>
@@ -195,44 +213,38 @@ const ProjectCard: React.FC<{
 };
 
 export default function FeaturedProjects() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  // Footer heading drifts up and sharpens into focus as the section scrolls through view
-  const footerY = useTransform(scrollYProgress, [0.4, 0.85], [60, 0]);
-  const footerOpacity = useTransform(scrollYProgress, [0.4, 0.75], [0, 1]);
-
   return (
     <section
-      ref={sectionRef}
       id="featured-work"
       className="bg-background py-24 px-6 lg:px-16 overflow-hidden"
     >
       <div className="mx-auto w-full max-w-6xl">
-        {/* Responsive Bento Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 auto-rows-auto gap-4">
-          <ProjectCard index={0} {...PROJECTS[0]} className="lg:col-span-3 lg:row-span-2" />
-          <ProjectCard index={1} {...PROJECTS[1]} className="lg:col-span-2 lg:row-span-2" />
-          <ProjectCard index={2} {...PROJECTS[2]} className="lg:col-span-4 lg:row-span-1" />
-          <ProjectCard index={3} {...PROJECTS[3]} className="lg:col-span-2 lg:row-span-1" />
-          <ProjectCard index={4} {...PROJECTS[4]} className="lg:col-span-2 lg:row-span-1" />
-        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="flex min-h-[420px] max-w-[580px] flex-col justify-start pt-8 lg:col-span-3 lg:pr-10"
+          >
+            <h2 className="text-[clamp(3rem,4.7vw,5rem)] font-medium leading-[0.82] tracking-[-0.075em] text-foreground">
+              <span className="block whitespace-nowrap">THINGS</span>
+              <span className="ml-[1.5ch] mt-2 block whitespace-nowrap">I&apos;VE</span>
+              <span className="font-signature ml-[2.5ch] mt-5 block whitespace-nowrap text-[clamp(4.2rem,6.7vw,7rem)] leading-[0.55] tracking-[-0.045em] text-plasma-violet">
+                Built.
+              </span>
+            </h2>
+            <p className="mt-4 max-w-[390px] text-[15px] leading-relaxed text-muted">
+              A selection of thoughtful digital products, built to solve real problems and scale with purpose.
+            </p>
+          </motion.div>
 
-        {/* Section Footer Heading (Bottom Right) — animates in as you scroll past the grid */}
-        <motion.div
-          style={{ y: footerY, opacity: footerOpacity }}
-          className="max-w-2xl ml-auto text-right mt-10 lg:-mt-32 px-4 relative z-10 pointer-events-none"
-        >
-          <h2 className="text-4xl md:text-6xl font-bold font-display tracking-tight text-foreground mb-4">
-            Built for performance.<br />Designed for flexibility.
-          </h2>
-          <p className="text-muted text-lg">
-            Showcasing systems, applications, and tools I&apos;ve built. Combining beautiful UI with robust functionality to deliver seamless user experiences.
-          </p>
-        </motion.div>
+          <ProjectCard index={0} {...PROJECTS[0]} className="lg:col-span-3 lg:mt-24" />
+          <ProjectCard index={1} {...PROJECTS[1]} className="lg:col-span-4" />
+          <ProjectCard index={2} {...PROJECTS[2]} className="lg:col-span-2" />
+          <ProjectCard index={3} {...PROJECTS[3]} className="lg:col-span-3" />
+          <ProjectCard index={4} {...PROJECTS[4]} className="lg:col-span-3" />
+        </div>
       </div>
     </section>
   );
