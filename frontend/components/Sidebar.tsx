@@ -7,13 +7,13 @@ import { FaGithub, FaLinkedinIn } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
 const NAV_ITEMS = [
-  { label: "Home", href: "#home" },
-  { label: "About Me", href: "#about" },
-  { label: "Expertise", href: "#expertise" },
-  { label: "Projects", href: "#featured-work" },
-  { label: "Tech Stack", href: "#tech-stack" },
-  { label: "Experience", href: "#experience" },
-  { label: "Contact", href: "#contact" },
+  { label: "HOME", href: "#home" },
+  { label: "SERVICES", href: "#expertise" },
+  { label: "ABOUT ME", href: "#about" },
+  { label: "TECH STACK", href: "#tech-stack" },
+  { label: "EXPERIENCE", href: "#experience" },
+  { label: "PROJECTS", href: "#featured-work" },
+  { label: "CONTACT ME", href: "#contact" },
 ];
 
 
@@ -23,41 +23,47 @@ const SOCIALS = [
 ];
 
 export default function Sidebar() {
-  const [active, setActive] = useState("Home");
+  const [active, setActive] = useState("HOME");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
-    let frame = 0;
-    const syncActiveSection = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const marker = window.innerHeight * 0.36;
-        let current = NAV_ITEMS[0].label;
-        let closestSectionTop = Number.NEGATIVE_INFINITY;
+    const sections = NAV_ITEMS.map((item) => ({
+      ...item,
+      element: document.getElementById(item.href.slice(1)),
+    })).filter((item): item is (typeof NAV_ITEMS)[number] & { element: HTMLElement } => Boolean(item.element));
 
-        for (const item of NAV_ITEMS) {
-          const section = document.querySelector(item.href);
-          const sectionTop = section?.getBoundingClientRect().top;
-          if (
-            sectionTop !== undefined &&
-            sectionTop <= marker &&
-            sectionTop > closestSectionTop
-          ) {
-            current = item.label;
-            closestSectionTop = sectionTop;
-          }
+    let animationFrame = 0;
+    const syncActiveSection = () => {
+      animationFrame = 0;
+      const marker = window.innerHeight * 0.4;
+      let current = sections[0];
+      let closestPastSection = -Infinity;
+
+      for (const section of sections) {
+        const top = section.element.getBoundingClientRect().top;
+        if (top <= marker && top > closestPastSection) {
+          current = section;
+          closestPastSection = top;
         }
-        setActive(current);
-      });
+      }
+
+      if (current) setActive(current.label);
+    };
+
+    const requestSync = () => {
+      if (!animationFrame) animationFrame = window.requestAnimationFrame(syncActiveSection);
     };
 
     syncActiveSection();
-    window.addEventListener("scroll", syncActiveSection, { passive: true });
-    window.addEventListener("resize", syncActiveSection);
+    window.addEventListener("scroll", requestSync, { passive: true });
+    document.addEventListener("scroll", requestSync, { passive: true, capture: true });
+    window.addEventListener("resize", requestSync);
+
     return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", syncActiveSection);
-      window.removeEventListener("resize", syncActiveSection);
+      window.removeEventListener("scroll", requestSync);
+      document.removeEventListener("scroll", requestSync, true);
+      window.removeEventListener("resize", requestSync);
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
     };
   }, []);
 
@@ -80,7 +86,7 @@ export default function Sidebar() {
     <aside className="sticky top-0 z-50 w-full shrink-0 border-b border-line bg-background lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:h-screen lg:w-[240px] lg:border-b-0 lg:border-r lg:px-6 lg:py-8 lg:overflow-y-auto">
       {/* Compact mobile navbar */}
       <div className="flex items-center justify-between px-5 py-4 lg:hidden">
-        <a href="#home" onClick={(event) => handleNavigationClick(event, "#home", "Home")} className="flex items-center gap-3">
+        <a href="#home" onClick={(event) => handleNavigationClick(event, "#home", "HOME")} className="flex items-center gap-3">
           <div className="relative h-9 w-9 overflow-hidden rounded-full bg-line">
             <Image src="/images/heroimg.png" alt="Mudith Milinda" fill sizes="36px" className="object-cover" />
           </div>
