@@ -152,7 +152,7 @@ export default function Footer() {
         <ul className="flex flex-col gap-7">
           {CONTACT_ITEMS.map((item) => (
             <li key={item.label} className="flex items-center gap-4">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-foreground">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-plasma-violet/20 bg-plasma-surface/70 text-foreground">
                 {item.icon}
               </span>
               <div className="flex flex-col gap-0.5 text-[15px] leading-snug">
@@ -198,7 +198,7 @@ export default function Footer() {
                 aria-label={social.label}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-foreground transition-colors hover:bg-white/15"
+                className="flex h-10 w-10 items-center justify-center rounded-lg border border-plasma-violet/20 bg-plasma-surface/70 text-foreground transition-colors hover:border-plasma-violet/50 hover:bg-plasma-violet/15"
               >
                 {social.icon}
               </a>

@@ -46,7 +46,7 @@ function latLngToPercent(lat: number, lng: number) {
 const dottedMap = new DottedMap({ height: 100, grid: "diagonal" });
 const worldMapSvg = dottedMap.getSVG({
   radius: 0.22,
-  color: "#3f3f46",
+  color: "#5f4b78",
   shape: "circle",
   backgroundColor: "transparent",
 });
@@ -188,7 +188,7 @@ export default function Contact() {
               />
 
               {/* "We are here" label */}
-              <div className="absolute bottom-[88px] left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md border border-zinc-700 bg-[#1c1c1e] px-3 py-1.5 text-[11.5px] font-semibold text-zinc-200 shadow-lg">
+              <div className="absolute bottom-[88px] left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md border border-plasma-violet/35 bg-plasma-surface px-3 py-1.5 text-[11.5px] font-semibold text-foreground shadow-lg shadow-black/40">
                 We are here
               </div>
             </div>
@@ -199,14 +199,14 @@ export default function Contact() {
         <div
           ref={rightRef}
           style={{ transitionDelay: rightInView ? "200ms" : "0ms" }}
-          className={`relative min-h-[680px] overflow-hidden rounded-2xl border border-plasma-violet/35 bg-[#09090b] p-8 shadow-2xl shadow-black/60 transition-all duration-700 ease-out sm:p-10 ${
+          className={`relative min-h-[680px] overflow-hidden rounded-2xl border border-plasma-violet/35 bg-plasma-surface/35 p-8 shadow-2xl shadow-plasma-violet/5 transition-all duration-700 ease-out sm:p-10 ${
             rightInView ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
           }`}
         >
           <div
             className="pointer-events-none absolute right-0 top-0 h-56 w-56 opacity-[0.12]"
             style={{
-              backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)",
+              backgroundImage: "radial-gradient(circle, #8b5cf6 1px, transparent 1px)",
               backgroundSize: "14px 14px",
             }}
           />

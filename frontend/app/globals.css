@@ -40,7 +40,7 @@ body {
   background-color: var(--background);
   background-image:
     radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--plasma-pink) 8%, transparent), transparent 28rem),
-    radial-gradient(circle at 92% 28%, color-mix(in srgb, var(--plasma-blue) 8%, transparent), transparent 30rem);
+    radial-gradient(circle at 92% 28%, color-mix(in srgb, var(--plasma-violet) 9%, transparent), transparent 30rem);
   color: var(--foreground);
 }
 

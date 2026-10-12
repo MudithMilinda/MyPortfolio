@@ -64,16 +64,16 @@ export default function Hero() {
           </div>
 
           <h1 className="motion-reveal motion-delay-1 hero-headline text-ink">
-            <span className="hero-title block whitespace-nowrap text-[clamp(3.5rem,10vw,6rem)]">ENGINEERING</span>
-            <span className="hero-title -mt-[0.04em] ml-[12%] block whitespace-nowrap text-[clamp(3.5rem,10vw,6rem)]">DIGITAL</span>
-            <span className="font-signature -mt-2 ml-[2%] block whitespace-nowrap text-[clamp(5.25rem,17vw,10.5rem)] leading-[0.68] text-plasma-violet">experiences.</span>
+            <span className="hero-title block whitespace-nowrap text-[clamp(2.45rem,10vw,6rem)]">ENGINEERING</span>
+            <span className="hero-title -mt-[0.04em] ml-[12%] block whitespace-nowrap text-[clamp(2.45rem,10vw,6rem)]">DIGITAL</span>
+            <span className="font-signature -mt-2 ml-[2%] block whitespace-nowrap text-[clamp(3.9rem,17vw,10.5rem)] leading-[0.68] text-plasma-violet">experiences.</span>
           </h1>
 
           <div className="motion-reveal motion-delay-2 mt-13 ml-1 border-l border-plasma-violet/60 pl-4">
             <p className="text-[18px] font-medium leading-none tracking-tight text-ink">
               Mudith Milinda
             </p>
-            <p className="mt-2 whitespace-nowrap text-[9px] font-medium uppercase tracking-[0.24em] text-muted sm:text-[10px]">
+            <p className="mt-2 text-[8px] font-medium uppercase tracking-[0.16em] text-muted sm:whitespace-nowrap sm:text-[10px] sm:tracking-[0.24em]">
               Software Engineer <span className="mx-1 text-plasma-violet">·</span> Full-Stack Developer
             </p>
           </div>
