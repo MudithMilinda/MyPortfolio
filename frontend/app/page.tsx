@@ -5,6 +5,7 @@ import AboutMe from "@/components/AboutMe";
 import TechStack from "@/components/TechStack";
 import CareerTimeline from "@/components/CareerTimeline";
 import FeaturedProjects from "@/components/FeaturedProjects";
+import WhatICanBuild from "@/components/WhatICanBuild";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
@@ -19,6 +20,7 @@ export default function Home() {
         <TechStack />
         <CareerTimeline />
         <FeaturedProjects />
+        <WhatICanBuild />
         <Contact />
         <Footer />
       </div>

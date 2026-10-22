@@ -12,10 +12,17 @@ import { ArrowUpRight } from "lucide-react";
 // Rename these to match your actual filenames if different.
 const PROJECTS = [
   {
+    title: "Fixora",
+    description:
+      "A full-stack repair and inventory system for managing jobs, stock, suppliers, sales, warranties, payments, and business reports.",
+    image: "/images/Fixora.png",
+    href: "#",
+  },
+  {
     title: "Plan In",
     description:
       "A planning and scheduling platform designed to keep teams organized, with a clean, modern interface built for daily use.",
-    image: "/images/planin1.png",
+    image: "/images/planin.png",
     href: "https://planin.space/",
   },
   {
@@ -40,22 +47,14 @@ const PROJECTS = [
       "/images/jobalign.png",
     href: "https://jobalign-indol.vercel.app/",
   },
-  {
-    title: "Mobile Habit Tracker",
-    description:
-      "Cross-platform mobile application helping users build better habits with gamification, progress tracking, and social sharing.",
-    image:
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80",
-    href: "#",
-  },
 ];
 
 const PROJECT_METADATA = [
+  { category: "Full-stack / SaaS", tags: ["React", "TypeScript", "Express.js", "MySQL"] },
   { category: "Web / Product", tags: ["Next.js", "React", "Tailwind CSS"] },
   { category: "Web / Product", tags: ["Next.js", "React", "Responsive UI"] },
   { category: "Web / Tool", tags: ["Next.js", "TypeScript", "API"] },
   { category: "AI / Product", tags: ["Next.js", "AI", "REST APIs"] },
-  { category: "Mobile / Product", tags: ["Flutter", "Firebase", "Mobile UI"] },
 ];
 
 const CornerPlusIcons = () => (
@@ -177,7 +176,6 @@ const ProjectCard: React.FC<{
             <ParallaxImage src={image} alt={title} />
           </div>
         )}
-
         {/* Content Section */}
         <div className="relative z-10 flex flex-1 flex-col p-6">
           <div className="flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.2em] text-muted">
@@ -237,6 +235,14 @@ export default function FeaturedProjects() {
             <p className="mt-4 max-w-[390px] text-[15px] leading-relaxed text-muted">
               A selection of thoughtful digital products, built to solve real problems and scale with purpose.
             </p>
+            <div className="mt-auto max-w-[390px] border-t border-line pt-5">
+              <p className="text-[9px] font-medium uppercase tracking-[0.22em] text-plasma-violet">
+                Selected work · 2023 — present
+              </p>
+              <p className="mt-3 text-[13px] leading-relaxed text-muted">
+                From early ideas to live products, each project brings together clear design, reliable engineering, and real user needs.
+              </p>
+            </div>
           </motion.div>
 
           <ProjectCard index={0} {...PROJECTS[0]} className="lg:col-span-3 lg:mt-24" />
