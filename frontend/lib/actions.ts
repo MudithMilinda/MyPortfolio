@@ -1,110 +1,78 @@
-'use server';
+"use server";
 
-import { Resend } from 'resend';
+import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const MAX_NAME_LENGTH = 100;
+const MAX_COMPANY_LENGTH = 150;
+const MAX_MESSAGE_LENGTH = 5_000;
+
+function getField(formData: FormData, field: string, maxLength: number) {
+  const value = formData.get(field);
+  return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
+}
+
+function escapeHtml(value: string) {
+  return value.replace(/[&<>'"]/g, (character) => {
+    const entities: Record<string, string> = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "'": "&#39;",
+      '"': "&quot;",
+    };
+
+    return entities[character];
+  });
+}
 
 export async function sendEmail(formData: FormData) {
-  const name = formData.get('name') as string;
-  const email = formData.get('email') as string;
-  const company = formData.get('company') as string;
-  const message = formData.get('message') as string;
+  const name = getField(formData, "name", MAX_NAME_LENGTH);
+  const email = getField(formData, "email", 254);
+  const company = getField(formData, "company", MAX_COMPANY_LENGTH);
+  const message = getField(formData, "message", MAX_MESSAGE_LENGTH);
 
-  const emailHtml = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </head>
-      <body style="margin:0; padding:0; background-color:#0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0a0a0a; padding: 40px 16px;">
-          <tr>
-            <td align="center">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 560px; background-color:#141414; border:1px solid #262626; border-radius: 16px; overflow: hidden;">
+  if (!name || !email || !message) {
+    return { success: false, error: "Please complete all required fields." };
+  }
 
-                <!-- Header -->
-                <tr>
-                  <td style="padding: 28px 32px; border-bottom: 1px solid #262626;">
-                    <p style="margin:0; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color:#ec4899; font-weight: 700;">
-                      New Portfolio Message
-                    </p>
-                    <h1 style="margin: 6px 0 0; font-size: 20px; color:#ffffff; font-weight: 700;">
-                      You've got a new inquiry
-                    </h1>
-                  </td>
-                </tr>
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { success: false, error: "Please enter a valid email address." };
+  }
 
-                <!-- Body -->
-                <tr>
-                  <td style="padding: 28px 32px;">
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td style="padding: 10px 0; border-bottom: 1px solid #262626;">
-                          <p style="margin:0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color:#8a8a8a;">Name</p>
-                          <p style="margin: 4px 0 0; font-size: 15px; color:#ffffff; font-weight: 600;">${name}</p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding: 10px 0; border-bottom: 1px solid #262626;">
-                          <p style="margin:0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color:#8a8a8a;">Email</p>
-                          <p style="margin: 4px 0 0; font-size: 15px;">
-                            <a href="mailto:${email}" style="color:#ec4899; text-decoration:none; font-weight: 600;">${email}</a>
-                          </p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding: 10px 0; border-bottom: 1px solid #262626;">
-                          <p style="margin:0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color:#8a8a8a;">Company</p>
-                          <p style="margin: 4px 0 0; font-size: 15px; color:#ffffff; font-weight: 600;">${company || 'N/A'}</p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding: 16px 0 0;">
-                          <p style="margin:0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color:#8a8a8a;">Message</p>
-                          <p style="margin: 8px 0 0; font-size: 15px; line-height: 1.6; color:#e5e5e5; white-space: pre-wrap;">${message}</p>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return { success: false, error: "Email is not configured yet." };
+  }
 
-                <!-- CTA -->
-                <tr>
-                  <td style="padding: 0 32px 32px;">
-                    <a href="mailto:${email}" style="display:inline-block; background-color:#ec4899; color:#ffffff; text-decoration:none; font-size: 14px; font-weight: 700; padding: 12px 24px; border-radius: 999px;">
-                      Reply to ${name.split(' ')[0]}
-                    </a>
-                  </td>
-                </tr>
-
-                <!-- Footer -->
-                <tr>
-                  <td style="padding: 20px 32px; background-color:#0f0f0f; border-top: 1px solid #262626;">
-                    <p style="margin:0; font-size: 12px; color:#6b6b6b;">
-                      Sent from the contact form on your portfolio site.
-                    </p>
-                  </td>
-                </tr>
-
-              </table>
-            </td>
-          </tr>
-        </table>
-      </body>
-    </html>
-  `;
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safeCompany = escapeHtml(company || "N/A");
+  const safeMessage = escapeHtml(message).replace(/\n/g, "<br />");
 
   try {
-    const data = await resend.emails.send({
-      from: 'onboarding@resend.dev', // පසුව ඔබේ domain එකක් දාගන්න පුළුවන්
-      to: ['mudithmilinda@gmail.com'], // ඔබේ email ලිපිනය
-      subject: `New Message from ${name} (${company || 'Individual'})`,
-      html: emailHtml,
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL ?? "Portfolio <onboarding@resend.dev>",
+      to: [process.env.CONTACT_TO_EMAIL ?? "mudithmilinda@gmail.com"],
+      replyTo: email,
+      subject: `New portfolio message from ${name}`,
+      html: `
+        <h1>New portfolio inquiry</h1>
+        <p><strong>Name:</strong> ${safeName}</p>
+        <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
+        <p><strong>Company:</strong> ${safeCompany}</p>
+        <p><strong>Message:</strong><br />${safeMessage}</p>
+      `,
     });
 
-    return { success: true, data };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+    if (error) {
+      console.error("Resend email error:", error);
+      return { success: false, error: "Unable to send your message. Please try again." };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Contact form email error:", error);
+    return { success: false, error: "Unable to send your message. Please try again." };
   }
 }

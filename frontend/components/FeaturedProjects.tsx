@@ -10,7 +10,7 @@ import { ArrowUpRight } from "lucide-react";
 
 // NOTE: image paths below assume files exist in /public/images/.
 // Rename these to match your actual filenames if different.
-const PROJECTS = [
+export const PROJECTS = [
   {
     title: "Fixora",
     description:
@@ -26,11 +26,11 @@ const PROJECTS = [
     href: "https://planin.space/",
   },
   {
-    title: "Veltexo",
+    title: "Droplet",
     description:
-      "A polished business web presence combining modern design with fast, reliable performance across every device.",
-    image: "/images/veltexo.png",
-    href: "https://www.veltexo.com/",
+      "A privacy-focused macOS utility for fast, local file conversion and editing.",
+    image: "/images/droplet.png",
+    href: "#",
   },
   {
     title: "QuickMail",
@@ -49,12 +49,24 @@ const PROJECTS = [
   },
 ];
 
-const PROJECT_METADATA = [
+export const ALL_PROJECTS = [
+  ...PROJECTS,
+  {
+    title: "Veltexo",
+    description:
+      "A polished business web presence combining modern design with fast, reliable performance across every device.",
+    image: "/images/veltexo.png",
+    href: "https://www.veltexo.com/",
+  },
+];
+
+export const PROJECT_METADATA = [
   { category: "Full-stack / SaaS", tags: ["React", "TypeScript", "Express.js", "MySQL"] },
   { category: "Web / Product", tags: ["Next.js", "React", "Tailwind CSS"] },
-  { category: "Web / Product", tags: ["Next.js", "React", "Responsive UI"] },
+  { category: "Desktop / macOS", tags: ["Electron", "React", "TypeScript", "FFmpeg"] },
   { category: "Web / Tool", tags: ["Next.js", "TypeScript", "API"] },
   { category: "AI / Product", tags: ["Next.js", "AI", "REST APIs"] },
+  { category: "Web / Product", tags: ["Next.js", "React", "Responsive UI"] },
 ];
 
 const CornerPlusIcons = () => (
@@ -136,7 +148,7 @@ const ParallaxImage: React.FC<{ src: string; alt: string }> = ({
   );
 };
 
-const ProjectCard: React.FC<{
+export const ProjectCard: React.FC<{
   className?: string;
   title: string;
   description: string;
@@ -223,7 +235,7 @@ export default function FeaturedProjects() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="flex min-h-[420px] max-w-[580px] flex-col justify-start pt-8 lg:col-span-3 lg:pr-10"
+            className="flex min-h-[400px] max-w-[580px] flex-col justify-start pt-18 lg:col-span-3 lg:pr-10"
           >
             <h2 className="text-[clamp(3rem,4.7vw,5rem)] font-medium leading-[0.82] tracking-[-0.075em] text-foreground">
               <span className="block whitespace-nowrap">THINGS</span>
@@ -235,14 +247,12 @@ export default function FeaturedProjects() {
             <p className="mt-4 max-w-[390px] text-[15px] leading-relaxed text-muted">
               A selection of thoughtful digital products, built to solve real problems and scale with purpose.
             </p>
-            <div className="mt-auto max-w-[390px] border-t border-line pt-5">
-              <p className="text-[9px] font-medium uppercase tracking-[0.22em] text-plasma-violet">
-                Selected work · 2023 — present
-              </p>
-              <p className="mt-3 text-[13px] leading-relaxed text-muted">
-                From early ideas to live products, each project brings together clear design, reliable engineering, and real user needs.
-              </p>
-            </div>
+            <Link
+              href="/projects"
+              className="mt-6 inline-flex w-fit items-center gap-3 border border-foreground px-4 py-3 text-[10px] font-medium uppercase tracking-[0.2em] text-foreground transition-colors hover:border-plasma-violet hover:bg-plasma-violet hover:text-background"
+            >
+              More Projects <ArrowUpRight size={14} strokeWidth={1.5} />
+            </Link>
           </motion.div>
 
           <ProjectCard index={0} {...PROJECTS[0]} className="lg:col-span-3 lg:mt-24" />

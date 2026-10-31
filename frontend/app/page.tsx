@@ -20,7 +20,6 @@ export default function Home() {
         <TechStack />
         <CareerTimeline />
         <FeaturedProjects />
-        <WhatICanBuild />
         <Contact />
         <Footer />
       </div>
