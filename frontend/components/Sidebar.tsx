@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, Pencil, X } from "lucide-react";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa6";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const NAV_ITEMS = [
   { label: "HOME", href: "#home" },
@@ -25,6 +25,9 @@ const SOCIALS = [
 export default function Sidebar() {
   const [active, setActive] = useState("HOME");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+  const isNavigatingRef = useRef(false);
+  const navigationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const sections = NAV_ITEMS.map((item) => ({
@@ -35,6 +38,8 @@ export default function Sidebar() {
     let animationFrame = 0;
     const syncActiveSection = () => {
       animationFrame = 0;
+      if (isNavigatingRef.current) return;
+
       const marker = window.innerHeight * 0.4;
       let current = sections[0];
       let closestPastSection = -Infinity;
@@ -47,7 +52,11 @@ export default function Sidebar() {
         }
       }
 
-      if (current) setActive(current.label);
+      if (current) {
+        setActive((previous) =>
+          previous === current.label ? previous : current.label
+        );
+      }
     };
 
     const requestSync = () => {
@@ -56,15 +65,39 @@ export default function Sidebar() {
 
     syncActiveSection();
     window.addEventListener("scroll", requestSync, { passive: true });
-    document.addEventListener("scroll", requestSync, { passive: true, capture: true });
     window.addEventListener("resize", requestSync);
 
     return () => {
       window.removeEventListener("scroll", requestSync);
-      document.removeEventListener("scroll", requestSync, true);
       window.removeEventListener("resize", requestSync);
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
     };
+  }, []);
+
+  useEffect(() => {
+    if (!pendingNavigation) return;
+
+    const target = document.getElementById(pendingNavigation.slice(1));
+    if (!target) {
+      setPendingNavigation(null);
+      return;
+    }
+
+    const isMobile = window.matchMedia("(max-width: 1023px)").matches;
+    const headerOffset = isMobile ? 70 : 0;
+    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+
+    window.scrollTo({ top, behavior: "smooth" });
+    window.history.pushState(null, "", pendingNavigation);
+    setPendingNavigation(null);
+  }, [pendingNavigation]);
+
+  useEffect(() => {
+    const closeMobileNavigation = () => setMobileNavOpen(false);
+    window.addEventListener("hashchange", closeMobileNavigation);
+
+    return () => window.removeEventListener("hashchange", closeMobileNavigation);
   }, []);
 
   function handleNavigationClick(
@@ -73,20 +106,25 @@ export default function Sidebar() {
     label: string
   ) {
     event.preventDefault();
+    const target = document.getElementById(href.slice(1));
+    if (!target) return;
+
+    isNavigatingRef.current = true;
     setActive(label);
     setMobileNavOpen(false);
+    setPendingNavigation(href);
 
-    document.querySelector(href)?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
+    navigationTimeoutRef.current = setTimeout(() => {
+      isNavigatingRef.current = false;
+    }, 800);
   }
 
   return (
     <aside className="sticky top-0 z-50 w-full shrink-0 border-b border-line bg-background lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:h-screen lg:w-[240px] lg:border-b-0 lg:border-r lg:px-6 lg:py-8 lg:overflow-y-auto">
       {/* Compact mobile navbar */}
       <div className="flex items-center justify-between px-5 py-4 lg:hidden">
-        <a href="#home" onClick={(event) => handleNavigationClick(event, "#home", "HOME")} className="flex items-center gap-3">
+        <a href="#home" className="flex items-center gap-3">
           <div className="relative h-9 w-9 overflow-hidden rounded-full bg-line">
             <Image src="/images/heroimg.png" alt="Mudith Milinda" fill sizes="36px" className="object-cover" />
           </div>
@@ -100,22 +138,36 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {mobileNavOpen && (
-        <nav className="border-t border-line px-5 py-4 lg:hidden">
-          <ul className="grid grid-cols-2 gap-1">
-            {NAV_ITEMS.map((item) => {
-              const isActive = active === item.label;
-              return (
-                <li key={item.label}>
-                  <a href={item.href} onClick={(event) => handleNavigationClick(event, item.href, item.label)} className={`flex items-center gap-2 px-3 py-2.5 text-[13px] transition-colors ${isActive ? "bg-plasma-pink/10 font-semibold text-plasma-pink" : "text-muted"}`}>
-                    {item.label}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      )}
+      <AnimatePresence initial={false}>
+        {mobileNavOpen && (
+          <motion.nav
+            initial={{ height: 0, opacity: 0, y: -12 }}
+            animate={{ height: "auto", opacity: 1, y: 0 }}
+            exit={{ height: 0, opacity: 0, y: -12 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-x-0 top-full z-50 overflow-hidden border-t border-line bg-background shadow-xl shadow-black/20 lg:hidden"
+          >
+            <ul className="grid grid-cols-2 gap-1 px-5 py-4">
+              {NAV_ITEMS.map((item, index) => {
+                const isActive = active === item.label;
+                return (
+                  <motion.li
+                    key={item.label}
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.2, delay: index * 0.035 }}
+                  >
+                    <a href={item.href} className={`flex items-center gap-2 px-3 py-2.5 text-[13px] transition-colors ${isActive ? "bg-plasma-pink/10 font-semibold text-plasma-pink" : "text-muted"}`}>
+                      {item.label}
+                    </a>
+                  </motion.li>
+                );
+              })}
+            </ul>
+          </motion.nav>
+        )}
+      </AnimatePresence>
 
       {/* Profile */}
       <div className="motion-reveal mb-8 hidden lg:block">
