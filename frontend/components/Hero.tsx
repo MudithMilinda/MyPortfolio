@@ -103,7 +103,7 @@ export default function Hero() {
         {/* Right: portrait + stats */}
         <div className="motion-reveal-right mx-auto w-full max-w-[340px] lg:mx-0">
           <div className="motion-float aspect-[3/4] w-full overflow-hidden rounded-2xl bg-line">
-            {/* Photo lives at /public/images/heroimg.png */}
+            {/* Photo lives at /public/images/hero.png */}
             <Image
               src="/images/heroimg.png"
               alt="Portrait of Mudith Milinda"
