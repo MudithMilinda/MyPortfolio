@@ -25,9 +25,11 @@ const SOCIALS = [
 export default function Sidebar() {
   const [active, setActive] = useState("HOME");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
   const isNavigatingRef = useRef(false);
   const navigationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const correctionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const startTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const headerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const sections = NAV_ITEMS.map((item) => ({
@@ -72,26 +74,10 @@ export default function Sidebar() {
       window.removeEventListener("resize", requestSync);
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
       if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
+      if (correctionTimeoutRef.current) clearTimeout(correctionTimeoutRef.current);
+      if (startTimeoutRef.current) clearTimeout(startTimeoutRef.current);
     };
   }, []);
-
-  useEffect(() => {
-    if (!pendingNavigation) return;
-
-    const target = document.getElementById(pendingNavigation.slice(1));
-    if (!target) {
-      setPendingNavigation(null);
-      return;
-    }
-
-    const isMobile = window.matchMedia("(max-width: 1023px)").matches;
-    const headerOffset = isMobile ? 70 : 0;
-    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
-
-    window.scrollTo({ top, behavior: "smooth" });
-    window.history.pushState(null, "", pendingNavigation);
-    setPendingNavigation(null);
-  }, [pendingNavigation]);
 
   useEffect(() => {
     const closeMobileNavigation = () => setMobileNavOpen(false);
@@ -100,31 +86,74 @@ export default function Sidebar() {
     return () => window.removeEventListener("hashchange", closeMobileNavigation);
   }, []);
 
+  function getTargetTop(target: HTMLElement) {
+    const isMobile = window.matchMedia("(max-width: 1023px)").matches;
+    // Mobile: use the real navbar height instead of a hard-coded value
+    const headerHeight = headerRef.current?.offsetHeight ?? 64;
+    const headerOffset = isMobile ? headerHeight + 8 : 24;
+    return Math.max(
+      0,
+      target.getBoundingClientRect().top + window.scrollY - headerOffset
+    );
+  }
+
   function handleNavigationClick(
     event: React.MouseEvent<HTMLAnchorElement>,
     href: string,
     label: string
   ) {
+    if (!href.startsWith("#")) {
+      return;
+    }
+
     event.preventDefault();
-    const target = document.getElementById(href.slice(1));
-    if (!target) return;
+    const targetId = href.slice(1);
+    const target = document.getElementById(targetId);
 
     isNavigatingRef.current = true;
     setActive(label);
     setMobileNavOpen(false);
-    setPendingNavigation(href);
 
     if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
+    if (correctionTimeoutRef.current) clearTimeout(correctionTimeoutRef.current);
+    if (startTimeoutRef.current) clearTimeout(startTimeoutRef.current);
+
+    if (target) {
+      // Let the mobile menu start closing first, then scroll
+      startTimeoutRef.current = setTimeout(() => {
+        window.scrollTo({ top: getTargetTop(target), behavior: "smooth" });
+
+        // After the smooth scroll, fix any drift caused by layout shifts
+        correctionTimeoutRef.current = setTimeout(() => {
+          const expectedTop = getTargetTop(target);
+          if (Math.abs(window.scrollY - expectedTop) > 4) {
+            window.scrollTo({ top: expectedTop, behavior: "auto" });
+          }
+        }, 800);
+      }, 60);
+    }
+
+    if (window.location.hash !== href) {
+      window.history.pushState(null, "", href);
+    }
+
     navigationTimeoutRef.current = setTimeout(() => {
       isNavigatingRef.current = false;
-    }, 800);
+    }, 1100);
   }
 
   return (
-    <aside className="sticky top-0 z-50 w-full shrink-0 border-b border-line bg-background lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:h-screen lg:w-[240px] lg:border-b-0 lg:border-r lg:px-6 lg:py-8 lg:overflow-y-auto">
+    <aside
+      ref={headerRef}
+      className="sticky top-0 z-50 w-full shrink-0 border-b border-line bg-background lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:h-screen lg:w-[240px] lg:border-b-0 lg:border-r lg:px-6 lg:py-8 lg:overflow-y-auto"
+    >
       {/* Compact mobile navbar */}
       <div className="flex items-center justify-between px-5 py-4 lg:hidden">
-        <a href="#home" className="flex items-center gap-3">
+        <a
+          href="#home"
+          onClick={(event) => handleNavigationClick(event, "#home", "HOME")}
+          className="flex items-center gap-3"
+        >
           <div className="relative h-9 w-9 overflow-hidden rounded-full bg-line">
             <Image src="/images/heroimg.png" alt="Mudith Milinda" fill sizes="36px" className="object-cover" />
           </div>
@@ -158,7 +187,13 @@ export default function Sidebar() {
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.2, delay: index * 0.035 }}
                   >
-                    <a href={item.href} className={`flex items-center gap-2 px-3 py-2.5 text-[13px] transition-colors ${isActive ? "bg-plasma-pink/10 font-semibold text-plasma-pink" : "text-muted"}`}>
+                    <a
+                      href={item.href}
+                      onClick={(event) =>
+                        handleNavigationClick(event, item.href, item.label)
+                      }
+                      className={`flex items-center gap-2 px-3 py-2.5 text-[13px] transition-colors ${isActive ? "bg-plasma-pink/10 font-semibold text-plasma-pink" : "text-muted"}`}
+                    >
                       {item.label}
                     </a>
                   </motion.li>
